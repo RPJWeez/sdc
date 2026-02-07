@@ -1,0 +1,41 @@
+name: UD
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' 
+          cache: 'npm'       
+
+      - name: Install Dependencies
+        run: npm install      
+
+      - name: Run JS Script
+        env:
+          TWITCH_CLIENT_ID: ${{ secrets.CI }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.CS }}
+        run: |
+          node s.js 
+          
+      - name: Upload static files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'data.json.gz'
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
