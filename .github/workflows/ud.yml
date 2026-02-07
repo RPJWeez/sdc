@@ -31,6 +31,7 @@ jobs:
           TWITCH_CLIENT_ID: ${{ secrets.CI }}
           TWITCH_CLIENT_SECRET: ${{ secrets.CS }}
         run: |
+          mkdir -p public
           node s.js 
           
       - name: Upload static files

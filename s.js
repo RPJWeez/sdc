@@ -2,6 +2,7 @@ import 'dotenv/config';
 import axios from 'axios';
 import { writeFile } from 'fs/promises';
 import { gzipSync } from 'zlib';
+import path from 'path'
 
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
@@ -85,7 +86,7 @@ async function main() {
 
         const jsonContent = JSON.stringify(uniqueStreams)
         const compressed = gzipSync(Buffer.from(jsonContent));
-        await writeFile('data.json.gz', compressed);
+        await writeFile(path.join('./public','data.json.gz'), compressed);
         console.log(`Saved ${uniqueStreams.length} unique streams across all games (from ${pageCount} pages)`);
     } catch (error) {
         console.error('Error:', error.message);
